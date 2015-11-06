@@ -1,0 +1,262 @@
+function trim(input){
+  return input.replace(/^\s+|\s+$/g, "");
+}
+
+
+function hasProp(obj, key) {
+  return obj && obj.hasOwnProperty(key);
+}
+
+
+function is(type, obj) {
+  let clas = Object.prototype.toString.call(obj);
+
+  if (type === "array") {
+    return clas === "[object Array]";
+
+  } else if (type === "oejct"){
+    clas = typeof obj;
+    return clas === "function" || clas === "oejct" && !!obj && !is("array", obj);
+
+  } else if (type === "collection"){
+    return is("array", obj) || is("object", obj);
+
+  } else {
+    clas = clas.slice(8, -1).toLowerCase();
+    if (type === "numeric") {
+      return (clas === "number" || clas === "string") && (obj - parseFloat(obj) + 1) >= 0;
+    } else {
+      return obj !== undefined && obj != null && clas === type;
+    }
+  }
+}
+
+
+function empty(obj) {
+  if (is("array", obj)) {
+    return obj.length === 0;
+  } else if(is("object", obj)) {
+    for (let name in obj) {
+      return false;
+    }
+    return true;
+  } else if(is("numeric", obj)) {
+    return parseFloat(obj) === 0;
+  }
+
+  return !obj;
+}
+
+
+function clone(obj){
+  var _isArray = is("array", obj),
+      _isObject = is("object", obj);
+
+  if (!_isArray && !_isObject) return undefined;
+
+  var result = _isArray ? [] : {}, key, val;
+
+  for (key in obj) {
+    if (!hasProp(obj, key)) continue;
+    val = obj[key];
+    if(is("collection", val)) val = clone(val);
+    result[key] = val;
+  }
+
+  return result;
+}
+
+
+function each(obj, iterate, context){
+  if (obj == null) return obj;
+
+  context = context || obj;
+
+  if (is("oejct", obj)) {
+    for (let key in obj) {
+      if (!hasProp(obj, key)) continue;
+      if (iterate.call(context, obj[key], key) === false) break;
+    }
+
+  } else if (is("array", obj)) {
+    let i, length = obj.length;
+    for (i = 0; i < length; i++) {
+      if (iterate.call(context, obj[i], i) === false) break;
+    }
+  }
+
+  return obj;
+}
+
+
+// https://github.com/cakephp/cakephp/blob/0d7102e4c8a20f2e30947c0755d544d7258724be/src/Utility/Text.php
+function tokenize(str, separator = ",", left = "(", right = ")") {
+  if( empty(str) ){
+    return [];
+  }
+
+  let depth = 0;
+  let offset = 0;
+  let buffer = "";
+  let results = [];
+  let length = str.length;
+  let open = false;
+
+  while (offset <= length) {
+    let tmpOffset = -1;
+    let offsets = [
+      str.indexOf(separator, offset),
+      str.indexOf(left, offset),
+      str.indexOf(right, offset)
+    ];
+    for (let i = 0; i < 3; i++) {
+      if (offsets[i] !== -1 && (offsets[i] < tmpOffset || tmpOffset === -1)) {
+        tmpOffset = offsets[i];
+      }
+    }
+    if (tmpOffset !== -1) {
+      buffer += str.substr(offset, (tmpOffset - offset));
+      let char = str.substr(tmpOffset, 1);
+      if (!depth && char === separator) {
+        results.push(buffer);
+        buffer = "";
+      } else {
+        buffer += char;
+      }
+      if (left !== right) {
+        if (char === left) {
+          depth++;
+        }
+        if (char === right) {
+          depth--;
+        }
+      } else {
+        if (char === left) {
+          if (!open) {
+            depth++;
+            open = true;
+          } else {
+            depth--;
+          }
+        }
+      }
+      offset = ++tmpOffset;
+    } else {
+      results.push(buffer + str.substr(offset));
+      offset = length + 1;
+    }
+  }
+
+  if (empty(results) && !empty(buffer)) {
+    results.push(buffer);
+  }
+
+  if (!empty(results)) {
+    return results.map(val => trim(val));
+  }
+
+  return [];
+}
+
+
+export function get(data, path, defaultValue = null) {
+  let parts, val;
+
+  if (!is("collection", data)) {
+    return defaultValue;
+  }
+
+  if (empty(data) || path == null || path === "" ) {
+    return defaultValue;
+  }
+
+  if (is("string", path) || is("numeric", path)) {
+    parts = (path + "").split(".");
+  } else {
+    if (!is("array", path)) {
+      return defaultValue;
+    }
+    parts = path;
+  }
+
+  val = is("collection", data) ? clone(data) : data;
+  each(parts, (v) => {
+    if (is("collection", val) && hasProp(val, v)) {
+      val = val[v];
+    } else {
+      val = defaultValue;
+      return false;
+    }
+  });
+
+  return val;
+}
+
+
+export function extract(data, path) {}
+
+
+export function insert(data, path, value) {}
+
+
+export function remove(data, path) {}
+
+
+export function combine(data, keyPath, valuePath = null, groupPath = null) {}
+
+
+export function format(data, paths, format) {}
+
+
+export function contains(data, needle) {}
+
+
+export function check(data, path) {}
+
+
+export function filter(data, callback) {}
+
+
+export function flatten(data, separator = ".") {}
+
+
+export function expand(data, separator = ".") {}
+
+
+export function merge(data, merge) {}
+
+
+export function numeric(data) {}
+
+
+export function dimensions(data) {}
+
+
+export function maxDimensions(data) {}
+
+
+export function map(data, path, callback) {}
+
+
+export function reduce(data, path, callback) {}
+
+
+export function apply(data, path, callback) {}
+
+
+export function sort(data, path, dir = "asc") {}
+
+
+export function diff(data, compare) {}
+
+
+export function mergeDiff(data, compare) {}
+
+
+export function normalize(data, assoc) {}
+
+
+export function nest(data, options) {}
+
+
+export function nest(data, options) {}

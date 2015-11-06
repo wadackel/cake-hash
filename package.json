@@ -1,0 +1,38 @@
+{
+  "name": "hash-cake",
+  "version": "0.0.1",
+  "description": "CakePHP in Utility.Hash class like a collection manipulation. In JavaScript.",
+  "main": "hash-cake.js",
+  "scripts": {
+    "dev": "npm run watch",
+    "watch": "npm run watch:test",
+    "watch:test": "mocha -w -R 'list' --compilers js:espower-babel/guess test/**/*.js",
+    "test": "mocha --compilers js:espower-babel/guess test/**/*.js",
+    "lint": "eslint hash-cake.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tsuyoshiwada/hash-cake.git"
+  },
+  "keywords": [
+    "array",
+    "object",
+    "utility",
+    "browser",
+    "client",
+    "server",
+    "cakephp"
+  ],
+  "author": "tsuyoshiwada",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tsuyoshiwada/hash-cake/issues"
+  },
+  "homepage": "https://github.com/tsuyoshiwada/hash-cake#readme",
+  "devDependencies": {
+    "eslint": "^1.8.0",
+    "espower-babel": "^3.3.0",
+    "mocha": "^2.3.3",
+    "power-assert": "^1.1.0"
+  }
+}
