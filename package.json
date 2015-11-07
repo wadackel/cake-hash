@@ -7,8 +7,9 @@
     "dev": "npm run watch",
     "watch": "npm run watch:test",
     "watch:test": "mocha -w -R 'list' --compilers js:espower-babel/guess test/**/*.js",
-    "test": "mocha --compilers js:espower-babel/guess test/**/*.js",
-    "lint": "eslint hash-cake.js"
+    "test": "npm run test:lint && npm run test:mocha",
+    "test:mocha": "mocha --compilers js:espower-babel/guess test/**/*.js",
+    "test:lint": "eslint hash-cake.js"
   },
   "repository": {
     "type": "git",

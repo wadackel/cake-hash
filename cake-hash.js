@@ -72,7 +72,7 @@ function each(obj, iterate, context){
 
   context = context || obj;
 
-  if (is("oejct", obj)) {
+  if (is("object", obj)) {
     for (let key in obj) {
       if (!hasProp(obj, key)) continue;
       if (iterate.call(context, obj[key], key) === false) break;
@@ -89,7 +89,6 @@ function each(obj, iterate, context){
 }
 
 
-// https://github.com/cakephp/cakephp/blob/0d7102e4c8a20f2e30947c0755d544d7258724be/src/Utility/Text.php
 function tokenize(str, separator = ",", left = "(", right = ")") {
   if( empty(str) ){
     return [];
@@ -159,6 +158,37 @@ function tokenize(str, separator = ",", left = "(", right = ")") {
 }
 
 
+function splitConditions(token) {
+  let conditions = false;
+  let position = token.indexOf("[");
+  if (position > -1) {
+    conditions = token.substr(position);
+    token = token.substr(0, position);
+  }
+  return [token, conditions];
+}
+
+
+function matchToken(key, token) {
+  switch (token) {
+    case "{n}":
+      return is("numeric", key);
+    case "{s}":
+      return is("string", key);
+    case "{*}":
+      return true;
+    default:
+      return is("numeric", token) ? (key == token) : key === token;
+  }
+}
+
+
+function matches(data, selector) {
+  // TODO
+  return false;
+}
+
+
 export function get(data, path, defaultValue = null) {
   let parts, val;
 
@@ -193,7 +223,55 @@ export function get(data, path, defaultValue = null) {
 }
 
 
-export function extract(data, path) {}
+export function extract(data, path) {
+  if (!is("collection", data)) {
+    return null;
+  }
+
+  if (empty(path)) {
+    return data;
+  }
+
+  if (!/[{\[]/.test(path)) {
+    return get(data, path);
+  }
+
+  const key = "__set_item__";
+  let tokens;
+  let context = {[key]: [data]};
+
+  if (path.indexOf("[") < 0) {
+    tokens = path.split(".");
+  } else {
+    tokens = tokenize(path, ".", "[", "]");
+  }
+
+  each(tokens, (token) => {
+    let next = [];
+    let [_token, conditions] = splitConditions(token);
+
+    each(context[key], (item) => {
+      each(item, (v, k) => {
+        if (matchToken(k, _token)) {
+          next.push(v);
+        }
+      });
+    });
+
+    if (conditions) {
+      let filter = [];
+      each(next, (item) => {
+        if (is("collection", item) && matches(item, conditions)) {
+          filter.push(item);
+        }
+      });
+      next = filter;
+    }
+    context = {[key]: next};
+  });
+
+  return context[key];
+}
 
 
 export function insert(data, path, value) {}

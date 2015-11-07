@@ -1,5 +1,5 @@
 import assert from "power-assert"
-import * as Hash from "../hash-cake"
+import * as Hash from "../cake-hash"
 
 
 function getArticleData() {
@@ -148,11 +148,21 @@ describe("cake-hash", () => {
     assert(Hash.get(data, "a.b.c.d") === 1);
   });
 
-  it("extract()", () => {
+  it("extract() - Basic", () => {
     let data = getArticleData();
     assert.deepEqual(Hash.extract(data, ""), data);
     assert(Hash.extract(data, "0.article.title") === "First Article");
     assert(Hash.extract(data, "1.article.title") === "Second Article");
     assert.deepEqual(Hash.extract([false], "{n}.something.another_thing"), []);
+  });
+
+  it("extract() - NumericKey", () => {
+    let data = getArticleData();
+    assert.deepEqual(Hash.extract(data, "{n}.article.title"), [
+      "First Article", "Second Article",
+      "Third Article", "Fourth Article",
+      "Fifth Article"
+    ]);
+    assert.deepEqual(Hash.extract(data, "0.comment.{n}.user_id"), ["2", "4"]);
   });
 });
