@@ -184,4 +184,28 @@ describe("cake-hash", () => {
     };
     assert.deepEqual(Hash.extract(data, "user.{n}.name"), ["Neo", "Morpheus"]);
   });
+
+  it("extract() - NumericNonZero", () => {
+    let data = {
+      1: {
+        user: {
+          id: 1,
+          name: "John"
+        }
+      },
+      2: {
+        user: {
+          id: 2,
+          name: "Bob"
+        }
+      },
+      3: {
+        user: {
+          id: 3,
+          name: "Tony"
+        }
+      }
+    };
+    assert.deepEqual(Hash.extract(data, "{n}.user.name"), ["John", "Bob", "Tony"]);
+  });
 });
