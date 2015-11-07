@@ -165,4 +165,23 @@ describe("cake-hash", () => {
     ]);
     assert.deepEqual(Hash.extract(data, "0.comment.{n}.user_id"), ["2", "4"]);
   });
+
+  it("extract() - NumericMixedKeys", () => {
+    let data = {
+      user: {
+        0: {
+          id: 4,
+          name: "Neo"
+        },
+        1: {
+          id: 5,
+          name: "Morpheus"
+        },
+        stringKey: {
+          name: "Fail"
+        }
+      }
+    };
+    assert.deepEqual(Hash.extract(data, "user.{n}.name"), ["Neo", "Morpheus"]);
+  });
 });
