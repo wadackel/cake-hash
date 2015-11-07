@@ -220,4 +220,21 @@ describe("cake-hash", () => {
     ]);
     assert.deepEqual(Hash.extract(data, "{n}.{s}.nesting.test.1"), ["foo"]);
   });
+
+  it("extract() - Wildcard", () => {
+    let data = {
+      "02000009C5560001": {name: "Mr. Alphanumeric"},
+      "2300000918020101": {name: "Mr. Numeric"},
+      "390000096AB30001": {name: "Mrs. Alphanumeric"},
+      stuff: {name: "Ms. Word"},
+      123: {name: "Mr. Number"}
+    };
+    assert.deepEqual(Hash.extract(data, [
+      "Mr. Alphanumeric",
+      "Mr. Numeric",
+      "Mrs. Alphanumeric",
+      "Mr. Word",
+      "Mr. Number"
+    ]));
+  });
 });
