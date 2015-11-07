@@ -4,12 +4,12 @@
   "description": "CakePHP in Utility.Hash class like a collection manipulation. In JavaScript.",
   "main": "hash-cake.js",
   "scripts": {
-    "dev": "npm run watch",
+    "start": "npm run watch",
     "watch": "npm run watch:test",
     "watch:test": "mocha -w -R 'list' --compilers js:espower-babel/guess test/**/*.js",
     "test": "npm run test:lint && npm run test:mocha",
     "test:mocha": "mocha --compilers js:espower-babel/guess test/**/*.js",
-    "test:lint": "eslint hash-cake.js"
+    "test:lint": "eslint cake-hash.js"
   },
   "repository": {
     "type": "git",
