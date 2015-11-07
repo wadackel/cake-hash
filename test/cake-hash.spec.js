@@ -41,7 +41,7 @@ function getArticleData() {
         }
       ],
       deep: {
-        nest: {
+        nesting: {
           test: {
             1: "foo",
             2: {
@@ -207,5 +207,17 @@ describe("cake-hash", () => {
       }
     };
     assert.deepEqual(Hash.extract(data, "{n}.user.name"), ["John", "Bob", "Tony"]);
+  });
+
+  it("extract() - StringKey", () => {
+    let data = getArticleData();
+    assert.deepEqual(Hash.extract(data, "{n}.{s}.user"), [
+      "mariano",
+      "mariano",
+      "mariano",
+      "mariano",
+      "mariano"
+    ]);
+    assert.deepEqual(Hash.extract(data, "{n}.{s}.nesting.test.1"), ["foo"]);
   });
 });
