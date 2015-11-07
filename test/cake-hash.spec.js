@@ -237,4 +237,10 @@ describe("cake-hash", () => {
       "Mr. Number"
     ]));
   });
+
+  it("extract() - AttributePresence", () => {
+    let data = getArticleData();
+    assert.deepEqual(Hash.extract(data, "{n}.article[published]"), [data[1].article]);
+    assert.deepEqual(Hash.extract(data, "{n}.article[id][published]"), [data[1].article]);
+  });
 });
