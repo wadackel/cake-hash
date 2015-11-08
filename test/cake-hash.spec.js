@@ -304,4 +304,24 @@ describe("cake-hash", () => {
     data = {entity: false};
     assert.deepEqual(Hash.extract(data, "entity[id=1].data1"), []);
   });
+
+  it("extract() - AttributeComparison", () => {
+    let data = getArticleData();
+    let result;
+    result = Hash.extract(data, "{n}.comment.{n}[user_id > 2]");
+    assert.deepEqual(result, [data[0]["comment"][1]]);
+    assert(result[0]["user_id"] === "4");
+
+    result = Hash.extract(data, "{n}.comment.{n}[user_id >= 4]");
+    assert.deepEqual(result, [data[0]["comment"][1]]);
+    assert(result[0]["user_id"] === "4");
+
+    result = Hash.extract(data, "{n}.comment.{n}[user_id < 3]");
+    assert.deepEqual(result, [data[0]["comment"][0]]);
+    assert(result[0]["user_id"] === "2");
+
+    result = Hash.extract(data, "{n}.comment.{n}[user_id <= 2]");
+    assert.deepEqual(result, [data[0]["comment"][0]]);
+    assert(result[0]["user_id"] === "2");
+  });
 });
