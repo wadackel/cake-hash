@@ -211,8 +211,9 @@ function matches(data, selector) {
       prop = prop ? "true" : "false";
     }
 
-    if (op === "=" && val && val[0] === "/") {
-      if (!prop.match(new RegExp(val.substr(1, val.length - 2)))) {
+    if (op === "=" && val && val[0] === "/" && val[val.length - 1] === "/") {
+      prop = is("string", prop) || is("numeric", prop) ? prop : "";
+      if (!new RegExp(val.substr(1, val.length - 2)).test(prop)) {
         return false;
       }
     } else if ((op === "=" && prop != val) ||
