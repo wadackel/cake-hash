@@ -185,7 +185,7 @@ function matchToken(key, token) {
 
 function matches(data, selector) {
   const identifier = "(?:\\\\.|[\\w-_\.]|[^\\x00-\\xa0])+";
-  const attributes = new RegExp(`\\s*(${identifier})(?:\\s*([><!]?[=]|[><])\\s*(${identifier})|)\\s*\]`, "g");
+  const attributes = new RegExp(`\\s*(${identifier})(?:\\s*([><!]?[=]|[><])\\s*(\\/.*?\\/|${identifier})|)\\s*\]`, "g");
   let cond;
 
   while (cond = attributes.exec(selector)) {
@@ -212,7 +212,7 @@ function matches(data, selector) {
     }
 
     if (op === "=" && val && val[0] === "/") {
-      if (!val.match(prop)) {
+      if (!prop.match(new RegExp(val.substr(1, val.length - 2)))) {
         return false;
       }
     } else if ((op === "=" && prop != val) ||
