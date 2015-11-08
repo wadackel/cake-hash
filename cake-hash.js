@@ -184,8 +184,49 @@ function matchToken(key, token) {
 
 
 function matches(data, selector) {
-  // TODO
-  return false;
+  const identifier = "(?:\\\\.|[\\w-]|[^\\x00-\\xa0])+";
+  const attributes = new RegExp(`\[\s]*(${identifier})(?:\s*([*^$|!~]?=)\s*(${identifier})|)\s*\]`, "g");
+  let cond;
+
+  while (cond = attributes.exec(selector)) {
+    const attr = cond[1];
+    const op = cond[2] || null;
+    const val = cond[3] || null;
+    const hasProperty = hasProp(data, attr);
+
+    if (empty(op) && empty(val) && !hasProperty) {
+      return false;
+    }
+
+    if (!(hasProperty || data[attr] != null)) {
+      return false;
+    }
+
+    let prop = hasProperty ? prop = data[attr] : undefined;
+    let isBoolean = is("boolean", prop) || (prop === "true" || prop === "false");
+
+    if (isBoolean && is("numeric", val)) {
+      prop = prop ? "1": "0";
+    } else if(isBoolean) {
+      prop = prop ? "true" : "false";
+    }
+
+    if (op === "=" && val && val[0] === "/") {
+      if (!val.match(prop)) {
+        return false;
+      }
+    } else if ((op === "=" && prop != val) ||
+      (op === "!=" && prop == val) ||
+      (op === ">" && prop <= val) ||
+      (op === "<" && prop >= val) ||
+      (op === ">=" && prop < val) ||
+      (op === "<=" && prop > val)
+    ) {
+      return false;
+    }
+  }
+  
+  return true;
 }
 
 
