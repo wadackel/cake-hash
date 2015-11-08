@@ -336,4 +336,18 @@ describe("cake-hash", () => {
     assert.deepEqual(Hash.extract(data, "{n}.article[title=/^First/]"), [data[0]["article"]]);
     assert.deepEqual(Hash.extract(data, "{n}.article[title=/^Fir[a-z]+/]"), [data[0]["article"]]);
   });
+
+  it("extract() - AttributeMatchesNull", () => {
+    let data = {
+      country: [
+        {name: "Canada"},
+        {name: "Australia"},
+        {name: null}
+      ]
+    };
+    assert.deepEqual(Hash.extract(data, "country.{n}[name=/Canada|^$/]"), [
+      {name: "Canada"},
+      {name: null}
+    ]);
+  });
 });
