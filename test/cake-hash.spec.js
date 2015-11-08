@@ -324,4 +324,10 @@ describe("cake-hash", () => {
     assert.deepEqual(result, [data[0]["comment"][0]]);
     assert(result[0]["user_id"] === "2");
   });
+
+  it("extract() - AttributeMultiple", () => {
+    let data = getArticleData();
+    assert(Hash.extract(data, "{n}.comment.{n}[user_id > 2][id=1]").length === 0);
+    assert.deepEqual(Hash.extract(data, "{n}.comment.{n}[user_id > 2][id=2]"), [data[0]["comment"][1]]);
+  });
 });
