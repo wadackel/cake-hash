@@ -350,4 +350,32 @@ describe("cake-hash", () => {
       {name: null}
     ]);
   });
+
+  it("extract() - UnevenKeys", () => {
+    let data = {
+      level1: {
+        level2: ["test1", "test2"],
+        level2bis: ["test3", "test4"]
+      }
+    };
+    assert.deepEqual(Hash.extract(data, "level1.level2"), ["test1", "test2"]);
+    assert.deepEqual(Hash.extract(data, "level1.level2bis"), ["test3", "test4"]);
+
+    data = {
+      level1: {
+        level2bis: [
+          ["test3", "test4"],
+          ["test5", "test6"]
+        ]
+      }
+    };
+    let expected = [
+      ["test3", "test4"],
+      ["test5", "test6"]
+    ];
+    assert.deepEqual(Hash.extract(data, "level1.level2bis"), expected);
+
+    data["level1"]["level2"] = ["test1", "test2"];
+    assert.deepEqual(Hash.extract(data, "level1.level2bis"), expected);
+  });
 });
