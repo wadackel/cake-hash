@@ -72,8 +72,7 @@ function getArticleData() {
         id: "3",
         user_id: "1",
         title: "Third Article",
-        body: "Third Article Body",
-        published: "Y"
+        body: "Third Article Body"
       },
       user: {
         id: "3",
@@ -88,8 +87,7 @@ function getArticleData() {
         id: "4",
         user_id: "1",
         title: "Fourth Article",
-        body: "Fourth Article Body",
-        published: "Y"
+        body: "Fourth Article Body"
       },
       user: {
         id: "4",
@@ -104,8 +102,7 @@ function getArticleData() {
         id: "5",
         user_id: "1",
         title: "Fifth Article",
-        body: "Fifth Article Body",
-        published: "Y"
+        body: "Fifth Article Body"
       },
       user: {
         id: "5",
