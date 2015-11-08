@@ -291,4 +291,17 @@ describe("cake-hash", () => {
     assert.deepEqual(result[0], users[0]);
     assert.deepEqual(result[1], users[1]);
   });
+
+  it("extract() - AttributeEqualityOnScalarValue", () => {
+    let data = {
+      entity: {
+        id: 1,
+        data1: "value"
+      }
+    };
+    assert.deepEqual(Hash.extract(data, "entity[id=1].data1"), ["value"]);
+
+    data = {entity: false};
+    assert.deepEqual(Hash.extract(data, "entity[id=1].data1"), []);
+  });
 });
