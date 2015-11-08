@@ -272,8 +272,23 @@ describe("cake-hash", () => {
       }
     ];
 
-    let result = Hash.extract(users, "{n}[active=0]");
+    let result;
+    result = Hash.extract(users, "{n}[active=0]");
     assert(result.length === 1);
     assert.deepEqual(result[0], users[2]);
+
+    result = Hash.extract(users, "{n}[active=false]");
+    assert(result.length === 1);
+    assert.deepEqual(result[0], users[2]);
+
+    result = Hash.extract(users, "{n}[active=1]");
+    assert(result.length === 2);
+    assert.deepEqual(result[0], users[0]);
+    assert.deepEqual(result[1], users[1]);
+
+    result = Hash.extract(users, "{n}[active=true]");
+    assert(result.length === 2);
+    assert.deepEqual(result[0], users[0]);
+    assert.deepEqual(result[1], users[1]);
   });
 });
