@@ -240,4 +240,40 @@ describe("cake-hash", () => {
     assert.deepEqual(Hash.extract(data, "{n}.article[published]"), [data[1].article]);
     assert.deepEqual(Hash.extract(data, "{n}.article[id][published]"), [data[1].article]);
   });
+
+  it("extract() - AttributeEquality", () => {
+    let data = getArticleData();
+    assert.deepEqual(Hash.extract(data, "{n}.article[id=3]"), [data[2].article]);
+    assert.deepEqual(Hash.extract(data, "{n}.article[id = 3]"), [data[2].article]);
+
+    let result = Hash.extract(data, "{n}.article[id!=3]");
+    assert(result[0]["id"] === "1");
+    assert(result[1]["id"] === "2");
+    assert(result[2]["id"] === "4");
+    assert(result[3]["id"] === "5");
+  });
+
+  it("extract() - AttributeBoolean", () => {
+    let users = [
+      {
+        id: 2,
+        username: "johndoe",
+        active: true
+      },
+      {
+        id: 5,
+        username: "kevin",
+        active: true
+      },
+      {
+        id: 9,
+        username: "samantha",
+        active: false
+      }
+    ];
+
+    let result = Hash.extract(users, "{n}[active=0]");
+    assert(result.length === 1);
+    assert.deepEqual(result[0], users[2]);
+  });
 });
