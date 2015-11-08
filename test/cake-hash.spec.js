@@ -330,4 +330,10 @@ describe("cake-hash", () => {
     assert(Hash.extract(data, "{n}.comment.{n}[user_id > 2][id=1]").length === 0);
     assert.deepEqual(Hash.extract(data, "{n}.comment.{n}[user_id > 2][id=2]"), [data[0]["comment"][1]]);
   });
+
+  it("extract() - AttributePattern", () => {
+    let data = getArticleData();
+    assert.deepEqual(Hash.extract(data, "{n}.article[title=/^First/]"), [data[0]["article"]]);
+    assert.deepEqual(Hash.extract(data, "{n}.article[title=/^Fir[a-z]+/]"), [data[0]["article"]]);
+  });
 });
