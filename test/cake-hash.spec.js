@@ -432,6 +432,22 @@ describe("cake-hash", () => {
         {item: {id: 4, title: "fourth", test: 2}},
         {item: {id: 5, title: "fifth"}}
       ]);
+
+      data = [
+        {item: {id: 1, title: "first"}},
+        {item: {id: 2, title: "second"}},
+        {item: {id: 3, title: "third"}},
+        {item: {id: 4, title: "fourth"}, testable: true},
+        {item: {id: 5, title: "fifth"}}
+      ];
+      result = Hash.insert(data, "{n}[testable].item[id=/\\b|\\b4/].test", 2);
+      assert.deepEqual(result, [
+        {item: {id: 1, title: "first"}},
+        {item: {id: 2, title: "second"}},
+        {item: {id: 3, title: "third"}},
+        {item: {id: 4, title: "fourth", test: 2}, testable: true},
+        {item: {id: 5, title: "fifth"}}
+      ]);
     });
   });
 });
