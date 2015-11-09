@@ -380,4 +380,31 @@ describe("cake-hash", () => {
       assert.deepEqual(Hash.extract(data, "level1.level2bis"), expected);
     });
   });
+
+  describe("insert()", () => {
+    it("Simple", () => {
+      let data = {
+        pages: {name: "page"}
+      };
+      assert.deepEqual(Hash.insert(data, "files", {name: "file"}), {
+        pages: {name: "page"},
+        files: {name: "file"}
+      });
+
+      data = {
+        pages: {name: "page"}
+      };
+      assert.deepEqual(Hash.insert(data, "pages.name", []), {
+        pages: {name: []}
+      });
+
+      data = {
+        foo: {bar: "baz"}
+      };
+      let result = Hash.insert(data, "some.0123.path", {foo: {bar: "baz"}});
+      assert.deepEqual(Hash.get(result, "some.0123.path"), {
+        foo: {bar: "baz"}
+      });
+    });
+  });
 });
