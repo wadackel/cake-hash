@@ -257,13 +257,24 @@ function simpleOp(op, data, path, values = null) {
           list[key] = values;
           return false;
         }
-        if (list[key] == null || hasProp(list, [key])) {
+        if (list[key] == null || !hasProp(list, key)) {
+          list[key] = {};
+        }
+        if (!is("collection", list[key])) {
           list[key] = {};
         }
         list = list[key];
-        if (!is("collection", list)) {
-          list[key] = {};
+        break;
+
+      case "remove":
+        if (i === last) {
+          delete list[key];
+          return false;
         }
+        if (list[key] == null || !hasProp(list, key)) {
+          return false;
+        }
+        list = list[key];
         break;
     }
   });
@@ -391,7 +402,49 @@ export function insert(data, path, values) {
 }
 
 
-export function remove(data, path) {}
+export function remove(data, path) {
+  const noTokens = path.indexOf("[") < 0;
+  const noExpansion = path.indexOf("{") < 0;
+
+  if (noExpansion && noTokens && path.indexOf(".") < 0) {
+    delete data[path];
+    return data;
+  }
+
+  const tokens = noTokens ? path.split(".") : tokenize(path, ".", "[", "]");
+
+  if (noExpansion && noTokens) {
+    return simpleOp("remove", data, tokens);
+  }
+
+  let token = tokens.shift();
+  let nextPath = tokens.join(".");
+  let [_token, conditions] = splitConditions(token);
+
+  each(data, (v, k) => {
+    let match = matchToken(k, _token);
+    if (match && is("collection", v)) {
+      if (conditions) {
+        if (matches(v, conditions)) {
+          if (nextPath) {
+            data[k] = remove(v, nextPath);
+          } else {
+            delete data[k];
+          }
+        }
+      } else {
+        data[k] = remove(v, nextPath);
+      }
+      if (empty(data[k])) {
+        delete data[k];
+      }
+    } else if (match && empty(nextPath)) {
+      delete data[k];
+    }
+  });
+
+  return data;
+}
 
 
 export function combine(data, keyPath, valuePath = null, groupPath = null) {}
