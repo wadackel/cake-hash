@@ -449,5 +449,52 @@ describe("cake-hash", () => {
         {item: {id: 5, title: "fifth"}}
       ]);
     });
+
+    it("OverwriteStringValue", () => {
+      let data = {
+        some: {string: "value"}
+      };
+      assert.deepEqual(Hash.insert(data, "some.string.value", ["values"]), {
+        some: {string: {value: ["values"]}}
+      });
+    });
+  });
+
+  describe("remove()", () => {
+    it("Simple", () => {
+      let data = {
+        pages: {name: "page"},
+        files: {name: "file"}
+      };
+      assert.deepEqual(Hash.remove(data, "files"), {
+        pages: {name: "page"}
+      });
+
+      data = {
+        pages: [
+          {name: "main"},
+          {name: "about", vars: {title: "page title"}}
+        ]
+      };
+      assert.deepEqual(Hash.remove(data, "pages.1.vars"), {
+        pages: [
+          {name: "main"},
+          {name: "about"}
+        ]
+      });
+      assert.deepEqual(Hash.remove(data, "pages.2.vars"), data);
+
+      data = [
+        {name: "pages"},
+        {name: "files"}
+      ];
+      assert.deepEqual(Hash.remove(data, "{n}[name=files]"), [
+        {name: "pages"}
+      ]);
+
+      data = ["foo", ["baz"]];
+      assert.deepEqual(Hash.remove(data, "{n}.part"), ["foo", ["baz"]]);
+      assert.deepEqual(Hash.remove(data, "{n}.{n}.part"), ["foo", ["baz"]]);
+    });
   });
 });
