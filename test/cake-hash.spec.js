@@ -406,5 +406,32 @@ describe("cake-hash", () => {
         foo: {bar: "baz"}
       });
     });
+
+    it("Multi", () => {
+      let data = getArticleData();
+      let result = Hash.insert(data, "{n}.article.insert", "value");
+      assert(result[0]["article"]["insert"] === "value");
+      assert(result[1]["article"]["insert"] === "value");
+
+      result = Hash.insert(data, "{n}.comment.{n}.insert", "value");
+      assert(result[0]["comment"][0]["insert"] === "value");
+      assert(result[0]["comment"][1]["insert"] === "value");
+
+      data = [
+        {item: {id: 1, title: "first"}},
+        {item: {id: 2, title: "second"}},
+        {item: {id: 3, title: "third"}},
+        {item: {id: 4, title: "fourth"}},
+        {item: {id: 5, title: "fifth"}}
+      ];
+      result = Hash.insert(data, "{n}.item[id=/\\b2|\\b4/]", {test: 2});
+      assert.deepEqual(result, [
+        {item: {id: 1, title: "first"}},
+        {item: {id: 2, title: "second", test: 2}},
+        {item: {id: 3, title: "third"}},
+        {item: {id: 4, title: "fourth", test: 2}},
+        {item: {id: 5, title: "fifth"}}
+      ]);
+    });
   });
 });

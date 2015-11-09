@@ -67,6 +67,17 @@ function clone(obj){
 }
 
 
+function merge(obj, ...sources) {
+  each(sources, (target) => {
+    let obj2 = Object(target);
+    each(target, (value, key) => {
+      obj[key] = value;
+    });
+  });
+  return obj;
+}
+
+
 function each(obj, iterate, context){
   if (obj == null) return obj;
 
@@ -256,19 +267,8 @@ function simpleOp(op, data, path, values = null) {
         break;
     }
   });
-  
+
   return data;
-}
-
-
-function merge(obj, ...sources) {
-  each(sources, (target) => {
-    let obj2 = Object(target);
-    each(target, (key, value) => {
-      obj[key] = value;
-    });
-  });
-  return obj;
 }
 
 
@@ -382,7 +382,7 @@ export function insert(data, path, values) {
   each(data, (v, k) => {
     if (matchToken(k, _token)) {
       if (!conditions || matches(v, conditions)) {
-        data[k] = nextPath ? insert(v, nextPath, values) : assign(v, values);
+        data[k] = nextPath ? insert(v, nextPath, values) : merge(v, values);
       }
     }
   });
