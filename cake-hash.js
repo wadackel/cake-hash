@@ -231,6 +231,47 @@ function matches(data, selector) {
 }
 
 
+function simpleOp(op, data, path, values = null) {
+  const length = path.length;
+  const last = length - 1;
+  let list = data;
+
+  each(path, (key, i) => {
+    if ((is("numeric", key) && parseInt(key, 10) > 0 || key === "0") && key.indexOf("0") !== 0) {
+      key = parseInt(key, 10);
+    }
+    switch (op) {
+      case "insert":
+        if (i === last) {
+          list[key] = values;
+          return false;
+        }
+        if (list[key] == null || hasProp(list, [key])) {
+          list[key] = {};
+        }
+        list = list[key];
+        if (!is("collection", list)) {
+          list[key] = {};
+        }
+        break;
+    }
+  });
+  
+  return data;
+}
+
+
+function merge(obj, ...sources) {
+  each(sources, (target) => {
+    let obj2 = Object(target);
+    each(target, (key, value) => {
+      obj[key] = value;
+    });
+  });
+  return obj;
+}
+
+
 export function get(data, path, defaultValue = null) {
   let parts, val;
 
@@ -316,7 +357,38 @@ export function extract(data, path) {
 }
 
 
-export function insert(data, path, value) {}
+export function insert(data, path, values) {
+  const noTokens = path.indexOf("[") < 0;
+  if (noTokens && path.indexOf(".") < 0) {
+    data[path] = values;
+    return data;
+  }
+
+  let tokens;
+  if (noTokens) {
+    tokens = path.split(".");
+  } else {
+    tokens = tokenize(path, ".", "[", "]");
+  }
+
+  if (noTokens && path.indexOf("{") < 0) {
+    return simpleOp("insert", data, tokens, values);
+  }
+
+  let token = tokens.shift();
+  let nextPath = tokens.join(".");
+  let [_token, conditions] = splitConditions(token);
+
+  each(data, (v, k) => {
+    if (matchToken(k, _token)) {
+      if (!conditions || matches(v, conditions)) {
+        data[k] = nextPath ? insert(v, nextPath, values) : assign(v, values);
+      }
+    }
+  });
+
+  return data;
+}
 
 
 export function remove(data, path) {}
@@ -343,7 +415,7 @@ export function flatten(data, separator = ".") {}
 export function expand(data, separator = ".") {}
 
 
-export function merge(data, merge) {}
+// export function merge(data, merge) {}
 
 
 export function numeric(data) {}
