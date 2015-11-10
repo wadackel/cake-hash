@@ -496,5 +496,38 @@ describe("cake-hash", () => {
       assert.deepEqual(Hash.remove(data, "{n}.part"), ["foo", ["baz"]]);
       assert.deepEqual(Hash.remove(data, "{n}.{n}.part"), ["foo", ["baz"]]);
     });
+
+    it("Multi", () => {
+      let data = getArticleData();
+      let result = Hash.remove(data, "{n}.article.title");
+      assert(result[0]["article"]["title"] === undefined);
+      assert(result[1]["article"]["title"] === undefined);
+
+      data = getArticleData();
+      result = Hash.remove(data, "{n}.article.{s}");
+      assert(result[0]["article"] === undefined);
+
+      data = [
+        {item: {id: 1, title: "first"}},
+        {item: {id: 2, title: "second"}},
+        {item: {id: 3, title: "third"}},
+        {item: {id: 4, title: "fourth"}},
+        {item: {id: 5, title: "fifth"}}
+      ];
+      let expected = [];
+      expected[0] = {item: {id: 1, title: "first"}};
+      expected[2] = {item: {id: 3, title: "third"}};
+      expected[4] = {item: {id: 5, title: "fifth"}};
+      assert.deepEqual(Hash.remove(data, "{n}.item[id=/\\b2|\\b4/]"), expected);
+
+      data = [
+        {item: {id: 1, title: "first"}},
+        {item: {id: 2, title: "second"}},
+        {item: {id: 3, title: "third"}},
+        {item: {id: 4}, testable: true},
+        {item: {id: 5, title: "fifth"}}
+      ];
+      assert.deepEqual(Hash.remove(data, "{n}[testable].item[id=/\\b2|\\b4/].title"), data);
+    });
   });
 });
