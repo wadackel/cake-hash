@@ -141,7 +141,7 @@ function getUserData() {
     {
       user: {
         id: 25,
-        group_id: 25,
+        group_id: 1,
         data: {
           user: "gwoo",
           name: "The Gwoo"
@@ -569,23 +569,23 @@ describe("cake-hash", () => {
 
   describe("combine()", () => {
     it("Simple", () => {
-      assert(Hash.combine([], "{n}.user.id", "{n}.user.data").length === 0);
+      assert.deepEqual(Hash.combine([], "{n}.user.id", "{n}.user.data"), {});
 
       let data = getUserData();
-      let expected = [];
+      let expected = {};
       expected[2] = null;
       expected[14] = null;
       expected[25] = null;
       assert.deepEqual(Hash.combine(data, "{n}.user.id"), expected);
       assert.deepEqual(Hash.combine(data, "{n}.user.id", "{n}.user.non-existant"), expected);
 
-      expected = [];
+      expected = {};
       expected[2] = {user: "mariano.iglesias", name: "Mariano Iglesias"};
       expected[14] = {user: "phpnut", name: "Larry E. Masters"};
       expected[25] = {user: "gwoo", name: "The Gwoo"};
       assert.deepEqual(Hash.combine(data, "{n}.user.id", "{n}.user.data"), expected);
 
-      expected = [];
+      expected = {};
       expected[2] = "Mariano Iglesias";
       expected[14] = "Larry E. Masters";
       expected[25] = "The Gwoo";
@@ -597,7 +597,7 @@ describe("cake-hash", () => {
         {user: {id: 1, name: "mark"}},
         {user: {name: "jose"}}
       ];
-      assert(Hash.combine(data, "{n}.user.id", "{n}.user.name").length === 0);
+      assert.deepEqual(Hash.combine(data, "{n}.user.id", "{n}.user.name"), {});
     });
 
     it("MissingKey", () => {
@@ -605,7 +605,40 @@ describe("cake-hash", () => {
         {user: {id: 1, name: "mark"}},
         {user: {id: 2}}
       ];
-      assert(Hash.combine(data, "{n}.user.id", "{n}.user.name").length === 0);
+      assert.deepEqual(Hash.combine(data, "{n}.user.id", "{n}.user.name"), {});
+    });
+
+    it("GroupPath", () => {
+      let data = getUserData();
+      assert.deepEqual(Hash.combine(data, "{n}.user.id", "{n}.user.data", "{n}.user.group_id"), {
+        1: {
+          2: {user: "mariano.iglesias", name: "Mariano Iglesias"},
+          25: {user: "gwoo", name: "The Gwoo"}
+        },
+        2: {
+          14: {user: "phpnut", name: "Larry E. Masters"}
+        }
+      });
+
+      assert.deepEqual(Hash.combine(data, "{n}.user.id", "{n}.user.data.name", "{n}.user.group_id"), {
+        1: {
+          2: "Mariano Iglesias",
+          25: "The Gwoo"
+        },
+        2: {
+          14: "Larry E. Masters"
+        }
+      });
+
+      assert.deepEqual(Hash.combine(data, "{n}.user.id", "{n}.user.data", "{n}.user.group_id"), {
+        1: {
+          2: {user: "mariano.iglesias", name: "Mariano Iglesias"},
+          25: {user: "gwoo", name: "The Gwoo"}
+        },
+        2: {
+          14: {user: "phpnut", name: "Larry E. Masters"}
+        }
+      });
     });
   });
 });
