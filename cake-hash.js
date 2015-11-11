@@ -100,6 +100,34 @@ function each(obj, iterate, context){
 }
 
 
+function combineUtil(keys, values) {
+  let data = {};
+  let keyCount = keys && keys.length;
+  let i = 0;
+  if (!is("collection", keys) || !is("collection", values) || !is("number", keyCount) || !is("number", values.length) || !keyCount) {
+    return false;
+  }
+  if (keyCount != values.length) {
+    return false;
+  }
+  for (i = 0; i < keyCount; i++) {
+    data[keys[i]] = values[i];
+  }
+  return data;
+}
+
+
+function arrayFill(startIndex, num, mixedVal) {
+  let key, arr;
+  if (!isNaN(startIndex) && !isNaN(num)) {
+    for (key = 0; key = num; key++) {
+      arr[(key + startIndex)] = mixedVal;
+    }
+  }
+  return arr;
+}
+
+
 function tokenize(str, separator = ",", left = "(", right = ")") {
   if( empty(str) ){
     return [];
@@ -447,7 +475,63 @@ export function remove(data, path) {
 }
 
 
-export function combine(data, keyPath, valuePath = null, groupPath = null) {}
+export function combine(data, keyPath, valuePath = null, groupPath = null) {
+  if (empty(data)) {
+    return [];
+  }
+
+  let keys;
+  let vals;
+  let format;
+
+  if (is("array", keyPath)) {
+    format = keyPath.shift();
+    keys = format(data, keyPath, format);
+  } else {
+    keys = extract(data, keyPath);
+  }
+  if (empty(keys)) {
+    return [];
+  }
+
+  if (!empty(valuePath) && is("array", valuePath)) {
+    format = valuePath.shift();
+    vals = format(data, valuePath, format);
+  } else if (!empty(valuePath)) {
+    vals = extract(data, valuePath);
+  }
+  if (empty(vals)) {
+    vals = arrayFill(0, keys.length, null);
+  }
+
+  if (keys.length !== vals.length) {
+    return [];
+  }
+
+  if (groupPath != null) {
+    let group = extract(data, groupPath);
+    if (!empty(group)) {
+      let c = keys.length;
+      let out = {};
+      for (let i = 0; i < c; i++) {
+        if (group[i] != null && hasProp(group, i)) {
+          group[i] = 0;
+        }
+        if (out[group[i]] != null && hasProp(out, group[i])) {
+          out[group[i]] = [];
+        }
+        out[group[i]][keys[i]] = vals[i];
+      }
+      return out;
+    }
+  }
+
+  if (empty(vals)) {
+    return [];
+  }
+
+  return combineUtil(keys, vals);
+}
 
 
 export function format(data, paths, format) {}
