@@ -101,9 +101,10 @@ function each(obj, iterate, context){
 
 
 function arrayCombine(keys, values) {
-  let data = [];
+  let data = {};
   let keyCount = keys && keys.length;
   let i = 0;
+  let key;
   if (!is("collection", keys) || !is("collection", values) || !is("number", keyCount) || !is("number", values.length) || !keyCount) {
     return false;
   }
@@ -111,7 +112,11 @@ function arrayCombine(keys, values) {
     return false;
   }
   for (i = 0; i < keyCount; i++) {
-    data[keys[i]] = values[i];
+    key = keys[i];
+    if (/^([1-9]\d*|0)$/.test(key)) {
+      key = parseInt(key, 10);
+    }
+    data[key] = values[i];
   }
   return data;
 }
@@ -477,7 +482,7 @@ export function remove(data, path) {
 
 export function combine(data, keyPath, valuePath = null, groupPath = null) {
   if (empty(data)) {
-    return [];
+    return {};
   }
 
   let keys = extract(data, keyPath);
@@ -485,7 +490,7 @@ export function combine(data, keyPath, valuePath = null, groupPath = null) {
   let format;
 
   if (empty(keys)) {
-    return [];
+    return {};
   }
 
   if (!empty(valuePath)) {
@@ -496,7 +501,7 @@ export function combine(data, keyPath, valuePath = null, groupPath = null) {
   }
 
   if (keys.length !== vals.length) {
-    return [];
+    return {};
   }
 
   if (groupPath != null) {
@@ -505,11 +510,11 @@ export function combine(data, keyPath, valuePath = null, groupPath = null) {
       let c = keys.length;
       let out = {};
       for (let i = 0; i < c; i++) {
-        if (group[i] != null && hasProp(group, i)) {
+        if (group[i] == null || !hasProp(group, i)) {
           group[i] = 0;
         }
-        if (out[group[i]] != null && hasProp(out, group[i])) {
-          out[group[i]] = [];
+        if (out[group[i]] == null || !hasProp(out, group[i])) {
+          out[group[i]] = {};
         }
         out[group[i]][keys[i]] = vals[i];
       }
@@ -518,7 +523,7 @@ export function combine(data, keyPath, valuePath = null, groupPath = null) {
   }
 
   if (empty(vals)) {
-    return [];
+    return {};
   }
 
   return arrayCombine(keys, vals);
@@ -535,3 +540,4 @@ export function expand(data, separator = ".") {}
 
 
 export function map(data, path, callback) {}
+
