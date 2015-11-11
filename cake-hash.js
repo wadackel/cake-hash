@@ -525,13 +525,7 @@ export function combine(data, keyPath, valuePath = null, groupPath = null) {
 }
 
 
-export function contains(data, needle) {}
-
-
 export function check(data, path) {}
-
-
-export function filter(data, callback) {}
 
 
 export function flatten(data, separator = ".") {}
@@ -540,40 +534,4 @@ export function flatten(data, separator = ".") {}
 export function expand(data, separator = ".") {}
 
 
-// export function merge(data, merge) {}
-
-
-export function numeric(data) {}
-
-
-export function dimensions(data) {}
-
-
-export function maxDimensions(data) {}
-
-
 export function map(data, path, callback) {}
-
-
-export function reduce(data, path, callback) {}
-
-
-export function apply(data, path, callback) {}
-
-
-export function sort(data, path, dir = "asc") {}
-
-
-export function diff(data, compare) {}
-
-
-export function mergeDiff(data, compare) {}
-
-
-export function normalize(data, assoc) {}
-
-
-export function nest(data, options) {}
-
-
-export function nest(data, options) {}
