@@ -591,5 +591,21 @@ describe("cake-hash", () => {
       expected[25] = "The Gwoo";
       assert.deepEqual(Hash.combine(data, "{n}.user.id", "{n}.user.data.name"), expected);
     });
+
+    it("MissingValue", () => {
+      let data = [
+        {user: {id: 1, name: "mark"}},
+        {user: {name: "jose"}}
+      ];
+      assert(Hash.combine(data, "{n}.user.id", "{n}.user.name").length === 0);
+    });
+
+    it("MissingKey", () => {
+      let data = [
+        {user: {id: 1, name: "mark"}},
+        {user: {id: 2}}
+      ];
+      assert(Hash.combine(data, "{n}.user.id", "{n}.user.name").length === 0);
+    });
   });
 });
