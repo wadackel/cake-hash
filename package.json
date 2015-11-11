@@ -6,7 +6,7 @@
   "scripts": {
     "start": "npm run watch",
     "watch": "npm run watch:test",
-    "watch:test": "mocha -w -R 'list' --compilers js:espower-babel/guess test/**/*.js",
+    "watch:test": "mocha -w --compilers js:espower-babel/guess test/**/*.js",
     "test": "npm run test:lint && npm run test:mocha",
     "test:mocha": "mocha --compilers js:espower-babel/guess test/**/*.js",
     "test:lint": "eslint cake-hash.js"
