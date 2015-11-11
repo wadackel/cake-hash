@@ -100,14 +100,14 @@ function each(obj, iterate, context){
 }
 
 
-function combineUtil(keys, values) {
-  let data = {};
+function arrayCombine(keys, values) {
+  let data = [];
   let keyCount = keys && keys.length;
   let i = 0;
   if (!is("collection", keys) || !is("collection", values) || !is("number", keyCount) || !is("number", values.length) || !keyCount) {
     return false;
   }
-  if (keyCount != values.length) {
+  if (keyCount !== values.length) {
     return false;
   }
   for (i = 0; i < keyCount; i++) {
@@ -118,9 +118,9 @@ function combineUtil(keys, values) {
 
 
 function arrayFill(startIndex, num, mixedVal) {
-  let key, arr;
+  let key, arr = [];
   if (!isNaN(startIndex) && !isNaN(num)) {
-    for (key = 0; key = num; key++) {
+    for (key = 0; key < num; key++) {
       arr[(key + startIndex)] = mixedVal;
     }
   }
@@ -480,24 +480,15 @@ export function combine(data, keyPath, valuePath = null, groupPath = null) {
     return [];
   }
 
-  let keys;
+  let keys = extract(data, keyPath);
   let vals;
   let format;
 
-  if (is("array", keyPath)) {
-    format = keyPath.shift();
-    keys = format(data, keyPath, format);
-  } else {
-    keys = extract(data, keyPath);
-  }
   if (empty(keys)) {
     return [];
   }
 
-  if (!empty(valuePath) && is("array", valuePath)) {
-    format = valuePath.shift();
-    vals = format(data, valuePath, format);
-  } else if (!empty(valuePath)) {
+  if (!empty(valuePath)) {
     vals = extract(data, valuePath);
   }
   if (empty(vals)) {
@@ -530,11 +521,8 @@ export function combine(data, keyPath, valuePath = null, groupPath = null) {
     return [];
   }
 
-  return combineUtil(keys, vals);
+  return arrayCombine(keys, vals);
 }
-
-
-export function format(data, paths, format) {}
 
 
 export function contains(data, needle) {}
