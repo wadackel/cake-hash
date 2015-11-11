@@ -116,6 +116,42 @@ function getArticleData() {
 }
 
 
+function getUserData() {
+  return [
+    {
+      user: {
+        id: 2,
+        group_id: 1,
+        data: {
+          user: "mariano.iglesias",
+          name: "Mariano Iglesias"
+        }
+      }
+    },
+    {
+      user: {
+        id: 14,
+        group_id: 2,
+        data: {
+          user: "phpnut",
+          name: "Larry E. Masters"
+        }
+      }
+    },
+    {
+      user: {
+        id: 25,
+        group_id: 25,
+        data: {
+          user: "gwoo",
+          name: "The Gwoo"
+        }
+      }
+    }
+  ];
+}
+
+
 describe("cake-hash", () => {
   it("get()", () => {
     let data = ["abc", "def"];
@@ -528,6 +564,32 @@ describe("cake-hash", () => {
         {item: {id: 5, title: "fifth"}}
       ];
       assert.deepEqual(Hash.remove(data, "{n}[testable].item[id=/\\b2|\\b4/].title"), data);
+    });
+  });
+
+  describe("combine()", () => {
+    it("Simple", () => {
+      assert(Hash.combine([], "{n}.user.id", "{n}.user.data").length === 0);
+
+      let data = getUserData();
+      let expected = [];
+      expected[2] = null;
+      expected[14] = null;
+      expected[25] = null;
+      assert.deepEqual(Hash.combine(data, "{n}.user.id"), expected);
+      assert.deepEqual(Hash.combine(data, "{n}.user.id", "{n}.user.non-existant"), expected);
+
+      expected = [];
+      expected[2] = {user: "mariano.iglesias", name: "Mariano Iglesias"};
+      expected[14] = {user: "phpnut", name: "Larry E. Masters"};
+      expected[25] = {user: "gwoo", name: "The Gwoo"};
+      assert.deepEqual(Hash.combine(data, "{n}.user.id", "{n}.user.data"), expected);
+
+      expected = [];
+      expected[2] = "Mariano Iglesias";
+      expected[14] = "Larry E. Masters";
+      expected[25] = "The Gwoo";
+      assert.deepEqual(Hash.combine(data, "{n}.user.id", "{n}.user.data.name"), expected);
     });
   });
 });
