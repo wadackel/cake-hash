@@ -641,4 +641,30 @@ describe("cake-hash", () => {
       });
     });
   });
+
+  it("check()", () => {
+    let data = {
+      "My Index 1": {
+        first: "The first item"
+      }
+    };
+    assert(Hash.check(data, "My Index 1.first") === true);
+    assert(Hash.check(data, "My Index 1") === true);
+    
+    data = {
+      "My Index 1": {
+        first: {
+          second: {
+            third: {
+              fourth: "Heavy. Nesting"
+            }
+          }
+        }
+      }
+    };
+    assert(Hash.check(data, "My Index 1.first.second") === true);
+    assert(Hash.check(data, "My Index 1.first.second.third") === true);
+    assert(Hash.check(data, "My Index 1.first.second.third.fourth") === true);
+    assert(Hash.check(data, "My Index 1.first.seconds.third.fourth") === false);
+  });
 });
