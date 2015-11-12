@@ -360,7 +360,7 @@ export function extract(data, path) {
   }
 
   if (!/[{\[]/.test(path)) {
-    return get(data, path);
+    return get(data, path, null);
   }
 
   const key = "__set_item__";
@@ -530,7 +530,20 @@ export function combine(data, keyPath, valuePath = null, groupPath = null) {
 }
 
 
-export function check(data, path) {}
+export function check(data, path) {
+  const results = extract(data, path);
+  if (results == null) {
+    return false;
+  }
+  if (is("collection", results)) {
+    return !empty(results);
+  } else if (is("string")) {
+    return results !== "";
+  } else if (is("numeric")) {
+    return parseFloat(results) > 0;
+  }
+  return !!results;
+}
 
 
 export function flatten(data, separator = ".") {}
