@@ -546,7 +546,37 @@ export function check(data, path) {
 }
 
 
-export function flatten(data, separator = ".") {}
+
+function _flatten(input, separator, currentPath = null) {
+  let results = {};
+  let path = null;
+  
+  if (is("array", input) && input.length === 0) {
+    path = currentPath == null ? 0 : currentPath;
+    results[path] = input;
+    return results;
+  }
+
+  each(input, function(val, key) {
+    path = currentPath == null ? key : `${currentPath}${separator}${key}`;
+
+    if (is("collection", val)) {
+      let children = _flatten(val, separator, path);
+      if (Object.keys(children).length > 0) {
+        results = merge(results, children);
+      }
+    } else {
+      results[path] = val;
+    }
+  });
+
+  return results;
+}
+
+
+export function flatten(data, separator = ".") {
+  return _flatten(data, separator);
+}
 
 
 export function expand(data, separator = ".") {}
