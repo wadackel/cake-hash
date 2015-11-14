@@ -9,8 +9,8 @@
     "watch": "npm run watch:test & npm run watch:js",
     "watch:js": "watchify src/cake-hash.js -o cake-hash.js -t babelify -v -d",
     "watch:test": "mocha -w --compilers js:espower-babel/guess test/**/*.js",
-    "build": "browserify src/cake-hash.js -o cake-hash.js -t babelify && npm run uglify",
-    "uglify": "uglifyjs -c -o cake-hash.min.js cake-hash.js",
+    "build": "browserify src/cake-hash.js -o cake-hash.js -t babelify -p [ browserify-header --file src/header.js ] && npm run uglify",
+    "uglify": "uglifyjs -c -o cake-hash.min.js cake-hash.js --comments",
     "mocha": "mocha --compilers js:espower-babel/guess test/**/*.js",
     "lint": "eslint src/**/*.js test/**/*.js"
   },
@@ -37,6 +37,7 @@
     "babel-preset-es2015": "^6.1.18",
     "babelify": "^7.2.0",
     "browserify": "^12.0.1",
+    "browserify-header": "^0.9.2",
     "eslint": "^1.8.0",
     "espower-babel": "^4.0.0",
     "mocha": "^2.3.3",
