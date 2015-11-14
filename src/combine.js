@@ -39,7 +39,7 @@ export default function combine(data, keyPath, valuePath = null, groupPath = nul
         }
         out[group[i]][keys[i]] = vals[i];
       }
-      return out;
+      return Collection.objToArray(out);
     }
   }
 

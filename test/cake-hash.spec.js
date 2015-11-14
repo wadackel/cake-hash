@@ -595,7 +595,7 @@ describe("cake-hash", () => {
         {user: {id: 1, name: "mark"}},
         {user: {name: "jose"}}
       ];
-      assert.deepEqual(Hash.combine(data, "{n}.user.id", "{n}.user.name"), {});
+      assert(Hash.combine(data, "{n}.user.id", "{n}.user.name").length === 0);
     });
 
     it("MissingKey", () => {
@@ -603,40 +603,35 @@ describe("cake-hash", () => {
         {user: {id: 1, name: "mark"}},
         {user: {id: 2}}
       ];
-      assert.deepEqual(Hash.combine(data, "{n}.user.id", "{n}.user.name"), {});
+      assert(Hash.combine(data, "{n}.user.id", "{n}.user.name").length === 0);
     });
 
     it("GroupPath", () => {
       let data = getUserData();
-      assert.deepEqual(Hash.combine(data, "{n}.user.id", "{n}.user.data", "{n}.user.group_id"), {
-        1: {
-          2: {user: "mariano.iglesias", name: "Mariano Iglesias"},
-          25: {user: "gwoo", name: "The Gwoo"}
-        },
-        2: {
-          14: {user: "phpnut", name: "Larry E. Masters"}
-        }
-      });
+      let result;
+      let expected = [];
+      expected[1] = [];
+      expected[1][2] = {user: "mariano.iglesias", name: "Mariano Iglesias"};
+      expected[1][25] = {user: "gwoo", name: "The Gwoo"};
+      expected[2] = [];
+      expected[2][14] = {user: "phpnut", name: "Larry E. Masters"};
+      assert.deepEqual(Hash.combine(data, "{n}.user.id", "{n}.user.data", "{n}.user.group_id"), expected);
 
-      assert.deepEqual(Hash.combine(data, "{n}.user.id", "{n}.user.data.name", "{n}.user.group_id"), {
-        1: {
-          2: "Mariano Iglesias",
-          25: "The Gwoo"
-        },
-        2: {
-          14: "Larry E. Masters"
-        }
-      });
+      expected = [];
+      expected[1] = [];
+      expected[1][2] = "Mariano Iglesias";
+      expected[1][25] = "The Gwoo";
+      expected[2] = [];
+      expected[2][14] = "Larry E. Masters";
+      assert.deepEqual(Hash.combine(data, "{n}.user.id", "{n}.user.data.name", "{n}.user.group_id"), expected);
 
-      assert.deepEqual(Hash.combine(data, "{n}.user.id", "{n}.user.data", "{n}.user.group_id"), {
-        1: {
-          2: {user: "mariano.iglesias", name: "Mariano Iglesias"},
-          25: {user: "gwoo", name: "The Gwoo"}
-        },
-        2: {
-          14: {user: "phpnut", name: "Larry E. Masters"}
-        }
-      });
+      expected = [];
+      expected[1] = [];
+      expected[1][2] = {user: "mariano.iglesias", name: "Mariano Iglesias"};
+      expected[1][25] = {user: "gwoo", name: "The Gwoo"};
+      expected[2] = [];
+      expected[2][14] = {user: "phpnut", name: "Larry E. Masters"};
+      assert.deepEqual(Hash.combine(data, "{n}.user.id", "{n}.user.data", "{n}.user.group_id"), expected);
     });
   });
 
