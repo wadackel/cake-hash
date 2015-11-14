@@ -778,4 +778,9 @@ describe("cake-hash", () => {
       }
     });
   });
+
+  it("map", () => {
+    let data = getArticleData();
+    assert.deepEqual(Hash.map(data, "{n}.article.id", (value) => parseInt(value, 10) * 2), [2, 4, 6, 8, 10]);
+  });
 });
