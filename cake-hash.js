@@ -452,10 +452,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = insert;
 
-var _core = require("./utils/core");
-
-var Core = _interopRequireWildcard(_core);
-
 var _collection = require("./utils/collection");
 
 var Collection = _interopRequireWildcard(_collection);
@@ -505,7 +501,7 @@ function insert(data, path, values) {
   return data;
 }
 
-},{"./utils/collection":13,"./utils/core":14,"./utils/text":15}],9:[function(require,module,exports){
+},{"./utils/collection":13,"./utils/text":15}],9:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {

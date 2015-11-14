@@ -1,4 +1,3 @@
-import * as Core from "./utils/core"
 import * as Collection from "./utils/collection"
 import * as Text from "./utils/text"
 
