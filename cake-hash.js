@@ -609,3 +609,10 @@ export function map(data, path, callback) {
   if (!is("array", values)) return null;
   return values.map(callback);
 }
+
+
+export function reduce(data, path, callback) {
+  const values = objToArray(extract(data, path));
+  if (!is("array", values)) return null;
+  return values.reduce(callback);
+}
