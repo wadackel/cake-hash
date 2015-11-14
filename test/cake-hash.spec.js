@@ -608,7 +608,6 @@ describe("cake-hash", () => {
 
     it("GroupPath", () => {
       let data = getUserData();
-      let result;
       let expected = [];
       expected[1] = [];
       expected[1][2] = {user: "mariano.iglesias", name: "Mariano Iglesias"};
