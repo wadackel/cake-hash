@@ -589,7 +589,6 @@ export function flatten(data, separator = ".") {
 
 export function expand(data, separator = ".") {
   let results = {};
-  let isArray = true;
 
   each(data, (value, flat) => {
     let keys = (flat + "").split(separator).reverse();
@@ -605,5 +604,8 @@ export function expand(data, separator = ".") {
 }
 
 
-export function map(data, path, callback) {}
-
+export function map(data, path, callback) {
+  const values = objToArray(extract(data, path));
+  if (!is("array", values)) return null;
+  return values.map(callback);
+}
