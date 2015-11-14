@@ -670,24 +670,10 @@ describe("cake-hash", () => {
 
   it("flatten", () => {
     let data = ["Larry", "Curly", "Moe"];
-    assert.deepEqual(Hash.flatten(data), {
-      0: "Larry",
-      1: "Curly",
-      2: "Moe"
-    });
+    assert.deepEqual(Hash.flatten(data), data);
 
-    data = {
-      0: "Larry",
-      1: "Curly",
-      2: "Moe",
-      9: "Shemp"
-    };
-    assert.deepEqual(Hash.flatten(data), {
-      0: "Larry",
-      1: "Curly",
-      2: "Moe",
-      9: "Shemp"
-    });
+    data[9] = "Shemp";
+    assert.deepEqual(Hash.flatten(data), data);
 
     data = [
       {
@@ -735,6 +721,61 @@ describe("cake-hash", () => {
     assert.deepEqual(Hash.flatten(data, "/"), {
       "0/post/id": 1,
       "1/post/id": 2
+    });
+  });
+
+  it("expand", () => {
+    let data = ["My", "Array", "To", "Flatten"];
+    let flat = Hash.flatten(data);
+    assert.deepEqual(Hash.expand(flat), data);
+
+    data = {
+      "0.post.id": 1,
+      "0.post.author_id": 1,
+      "0.post.title": "First Post",
+      "0.author.id": 1,
+      "0.author.user": "nate",
+      "0.author.password": "foo",
+      "1.post.id": 2,
+      "1.post.author_id": 3,
+      "1.post.title": "Second Post",
+      "1.post.body": "Second Post Body",
+      "1.author.id": 3,
+      "1.author.user": "larry",
+      "1.author.password": null
+    };
+    assert.deepEqual(Hash.expand(data), [
+      {
+        post: {id: 1, author_id: 1, title: "First Post"},
+        author: {id: 1, user: "nate", password: "foo"}
+      },
+      {
+        post: {id: 2, author_id: 3, title: "Second Post", body: "Second Post Body"},
+        author: {id: 3, user: "larry", password: null}
+      }
+    ]);
+
+    data = {
+      "0/post/id": 1,
+      "0/post/name": "test post"
+    };
+    assert.deepEqual(Hash.expand(data, "/"), [
+      {
+        post: {id: 1, name: "test post"}
+      }
+    ]);
+
+    data = {
+      "a.b.100.a": null,
+      "a.b.200.a": null
+    };
+    assert.deepEqual(Hash.expand(data), {
+      a: {
+        b: {
+          100: {a: null},
+          200: {a: null}
+        }
+      }
     });
   });
 });
