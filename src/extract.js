@@ -1,4 +1,4 @@
-import * as Core from "./utils/Core"
+import * as Core from "./utils/core"
 import * as Collection from "./utils/collection"
 import * as Text from "./utils/text"
 import get from "./get"
