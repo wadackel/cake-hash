@@ -783,4 +783,9 @@ describe("cake-hash", () => {
     let data = getArticleData();
     assert.deepEqual(Hash.map(data, "{n}.article.id", (value) => parseInt(value, 10) * 2), [2, 4, 6, 8, 10]);
   });
+
+  it("reduce", () => {
+    let data = getArticleData();
+    assert(Hash.reduce(data, "{n}.article.id", (one, two) => parseInt(one, 10) + parseInt(two, 10)) === 15);
+  });
 });
