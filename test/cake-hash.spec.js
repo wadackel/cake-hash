@@ -668,75 +668,73 @@ describe("cake-hash", () => {
     assert(Hash.check(data, "My Index 1.first.seconds.third.fourth") === false);
   });
 
-  describe("flatten", () => {
-    it("Simple()", () => {
-      let data = ["Larry", "Curly", "Moe"];
-      assert.deepEqual(Hash.flatten(data), {
-        0: "Larry",
-        1: "Curly",
-        2: "Moe"
-      });
+  it("flatten", () => {
+    let data = ["Larry", "Curly", "Moe"];
+    assert.deepEqual(Hash.flatten(data), {
+      0: "Larry",
+      1: "Curly",
+      2: "Moe"
+    });
 
-      data = {
-        0: "Larry",
-        1: "Curly",
-        2: "Moe",
-        9: "Shemp"
-      };
-      assert.deepEqual(Hash.flatten(data), {
-        0: "Larry",
-        1: "Curly",
-        2: "Moe",
-        9: "Shemp"
-      });
+    data = {
+      0: "Larry",
+      1: "Curly",
+      2: "Moe",
+      9: "Shemp"
+    };
+    assert.deepEqual(Hash.flatten(data), {
+      0: "Larry",
+      1: "Curly",
+      2: "Moe",
+      9: "Shemp"
+    });
 
-      data = [
-        {
-          post: {id: 1, author_id: 1, title: "First Post"},
-          author: {id: 1, user: "nate", password: "foo"}
-        },
-        {
-          post: {id: 2, author_id: 3, title: "Second Post", body: "Second Post Body"},
-          author: {id: 3, user: "larry", password: null}
-        }
-      ];
-      assert.deepEqual(Hash.flatten(data), {
-        "0.post.id": 1,
-        "0.post.author_id": 1,
-        "0.post.title": "First Post",
-        "0.author.id": 1,
-        "0.author.user": "nate",
-        "0.author.password": "foo",
-        "1.post.id": 2,
-        "1.post.author_id": 3,
-        "1.post.title": "Second Post",
-        "1.post.body": "Second Post Body",
-        "1.author.id": 3,
-        "1.author.user": "larry",
-        "1.author.password": null
-      });
+    data = [
+      {
+        post: {id: 1, author_id: 1, title: "First Post"},
+        author: {id: 1, user: "nate", password: "foo"}
+      },
+      {
+        post: {id: 2, author_id: 3, title: "Second Post", body: "Second Post Body"},
+        author: {id: 3, user: "larry", password: null}
+      }
+    ];
+    assert.deepEqual(Hash.flatten(data), {
+      "0.post.id": 1,
+      "0.post.author_id": 1,
+      "0.post.title": "First Post",
+      "0.author.id": 1,
+      "0.author.user": "nate",
+      "0.author.password": "foo",
+      "1.post.id": 2,
+      "1.post.author_id": 3,
+      "1.post.title": "Second Post",
+      "1.post.body": "Second Post Body",
+      "1.author.id": 3,
+      "1.author.user": "larry",
+      "1.author.password": null
+    });
 
-      data = [
-        {
-          post: {id: 1, author_id: null, title: "First Post"},
-          author: []
-        }
-      ];
-      assert.deepEqual(Hash.flatten(data), {
-        "0.post.id": 1,
-        "0.post.author_id": null,
-        "0.post.title": "First Post",
-        "0.author": []
-      });
+    data = [
+      {
+        post: {id: 1, author_id: null, title: "First Post"},
+        author: []
+      }
+    ];
+    assert.deepEqual(Hash.flatten(data), {
+      "0.post.id": 1,
+      "0.post.author_id": null,
+      "0.post.title": "First Post",
+      "0.author": []
+    });
 
-      data = [
-        {post: {id: 1}},
-        {post: {id: 2}}
-      ];
-      assert.deepEqual(Hash.flatten(data, "/"), {
-        "0/post/id": 1,
-        "1/post/id": 2
-      });
+    data = [
+      {post: {id: 1}},
+      {post: {id: 2}}
+    ];
+    assert.deepEqual(Hash.flatten(data, "/"), {
+      "0/post/id": 1,
+      "1/post/id": 2
     });
   });
 });
