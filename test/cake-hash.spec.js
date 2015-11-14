@@ -263,13 +263,13 @@ describe("cake-hash", () => {
         stuff: {name: "Ms. Word"},
         123: {name: "Mr. Number"}
       };
-      assert.deepEqual(Hash.extract(data, [
-        "Mr. Alphanumeric",
-        "Mr. Numeric",
-        "Mrs. Alphanumeric",
-        "Mr. Word",
-        "Mr. Number"
-      ]));
+      let results = Hash.extract(data, "{*}.name");
+      assert(results.length === 5);
+      assert(results.indexOf("Mr. Alphanumeric") > -1);
+      assert(results.indexOf("Mr. Numeric") > -1);
+      assert(results.indexOf("Mrs. Alphanumeric") > -1);
+      assert(results.indexOf("Ms. Word") > -1);
+      assert(results.indexOf("Mr. Number") > -1);
     });
 
     it("AttributePresence", () => {
