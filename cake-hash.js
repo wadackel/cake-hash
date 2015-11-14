@@ -25,6 +25,8 @@ function is(type, obj) {
     clas = clas.slice(8, -1).toLowerCase();
     if (type === "numeric") {
       return (clas === "number" || clas === "string") && (obj - parseFloat(obj) + 1) >= 0;
+    } else if (type === "integer") {
+      return (clas === "number" || clas === "string") && /^([1-9]\d*|0)$/.test(obj);
     } else {
       return obj !== undefined && obj != null && clas === type;
     }
@@ -67,12 +69,13 @@ function clone(obj){
 }
 
 
-function merge(obj, ...sources) {
-  each(sources, (target) => {
-    let obj2 = Object(target);
-    each(target, (value, key) => {
+function merge(obj, source, deep = false) {
+  each(source, (value, key) => {
+    if (deep && hasProp(obj, key) && is("collection", value)) {
+      merge(obj[key], value, deep);
+    } else {
       obj[key] = value;
-    });
+    }
   });
   return obj;
 }
@@ -130,6 +133,18 @@ function arrayFill(startIndex, num, mixedVal) {
     }
   }
   return arr;
+}
+
+
+function objToArray(obj) {
+  if (!is("object", obj)) return obj;
+  if (!Object.keys(obj).every((key) => is("integer", key))) return obj;
+
+  let array = [];
+  each(obj, (value, i) => {
+    array[i] = value;
+  });
+  return array;
 }
 
 
@@ -553,18 +568,17 @@ function _flatten(input, separator, currentPath = null) {
 
   each(input, function(val, key) {
     path = currentPath == null ? key : `${currentPath}${separator}${key}`;
-
     if (is("collection", val)) {
       let children = _flatten(val, separator, path);
       if (Object.keys(children).length > 0) {
         results = merge(results, children);
       }
-    } else {
+    } else if(val !== undefined) {
       results[path] = val;
     }
   });
 
-  return results;
+  return objToArray(results);
 }
 
 
@@ -573,7 +587,22 @@ export function flatten(data, separator = ".") {
 }
 
 
-export function expand(data, separator = ".") {}
+export function expand(data, separator = ".") {
+  let results = {};
+  let isArray = true;
+
+  each(data, (value, flat) => {
+    let keys = (flat + "").split(separator).reverse();
+    let child = {};
+    child[keys.shift()] = value;
+    each(keys, (k) => {
+      child = {[k]: child};
+    });
+    results = merge(results, child, true);
+  });
+
+  return objToArray(results);
+}
 
 
 export function map(data, path, callback) {}
