@@ -138,7 +138,7 @@ function check(data, path) {
   return results != null;
 }
 
-},{"./extract":5,"./utils/core":14}],3:[function(require,module,exports){
+},{"./extract":5,"./utils/core":13}],3:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -213,7 +213,7 @@ function combine(data, keyPath) {
   return Collection.arrayCombine(keys, vals);
 }
 
-},{"./extract":5,"./utils/collection":13,"./utils/core":14}],4:[function(require,module,exports){
+},{"./extract":5,"./utils/collection":12,"./utils/core":13}],4:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -247,7 +247,7 @@ function expand(data) {
   return Collection.objToArray(results);
 }
 
-},{"./utils/collection":13}],5:[function(require,module,exports){
+},{"./utils/collection":12}],5:[function(require,module,exports){
 "use strict";
 
 var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; })();
@@ -257,9 +257,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = extract;
 
-var _Core = require("./utils/Core");
+var _core = require("./utils/core");
 
-var Core = _interopRequireWildcard(_Core);
+var Core = _interopRequireWildcard(_core);
 
 var _collection = require("./utils/collection");
 
@@ -337,7 +337,7 @@ function extract(data, path) {
   return context[key];
 }
 
-},{"./get":7,"./utils/Core":12,"./utils/collection":13,"./utils/text":15}],6:[function(require,module,exports){
+},{"./get":7,"./utils/collection":12,"./utils/core":13,"./utils/text":14}],6:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -388,7 +388,7 @@ function _flatten(input, separator) {
   return Collection.objToArray(results);
 }
 
-},{"./utils/collection":13,"./utils/core":14}],7:[function(require,module,exports){
+},{"./utils/collection":12,"./utils/core":13}],7:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -442,7 +442,7 @@ function get(data, path) {
   return val;
 }
 
-},{"./utils/collection":13,"./utils/core":14}],8:[function(require,module,exports){
+},{"./utils/collection":12,"./utils/core":13}],8:[function(require,module,exports){
 "use strict";
 
 var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; })();
@@ -462,10 +462,12 @@ var Text = _interopRequireWildcard(_text);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
-function insert(data, path, values) {
+function insert(data, path) {
+  var value = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
+
   var noTokens = path.indexOf("[") < 0;
   if (noTokens && path.indexOf(".") < 0) {
-    data[path] = values;
+    data[path] = value;
     return data;
   }
 
@@ -477,7 +479,7 @@ function insert(data, path, values) {
   }
 
   if (noTokens && path.indexOf("{") < 0) {
-    return Collection.simpleOp("insert", data, tokens, values);
+    return Collection.simpleOp("insert", data, tokens, value);
   }
 
   var token = tokens.shift();
@@ -493,7 +495,7 @@ function insert(data, path, values) {
   Collection.each(data, function (v, k) {
     if (Text.matchToken(k, _token)) {
       if (!conditions || Text.matches(v, conditions)) {
-        data[k] = nextPath ? insert(v, nextPath, values) : Collection.merge(v, values);
+        data[k] = nextPath ? insert(v, nextPath, value) : Collection.merge(v, value);
       }
     }
   });
@@ -501,7 +503,7 @@ function insert(data, path, values) {
   return data;
 }
 
-},{"./utils/collection":13,"./utils/text":15}],9:[function(require,module,exports){
+},{"./utils/collection":12,"./utils/text":14}],9:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -530,7 +532,7 @@ function map(data, path, callback) {
   return !Core.isArray(values) ? null : values.map(callback);
 }
 
-},{"./extract":5,"./utils/collection":13,"./utils/core":14}],10:[function(require,module,exports){
+},{"./extract":5,"./utils/collection":12,"./utils/core":13}],10:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -559,7 +561,7 @@ function reduce(data, path, callback) {
   return !Core.isArray(values) ? null : values.reduce(callback);
 }
 
-},{"./extract":5,"./utils/collection":13,"./utils/core":14}],11:[function(require,module,exports){
+},{"./extract":5,"./utils/collection":12,"./utils/core":13}],11:[function(require,module,exports){
 "use strict";
 
 var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; })();
@@ -633,85 +635,7 @@ function remove(data, path) {
   return data;
 }
 
-},{"./utils/collection":13,"./utils/core":14,"./utils/text":15}],12:[function(require,module,exports){
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.getType = getType;
-exports.isArray = isArray;
-exports.isObject = isObject;
-exports.isNumber = isNumber;
-exports.isString = isString;
-exports.isBoolean = isBoolean;
-exports.isCollection = isCollection;
-exports.isNumeric = isNumeric;
-exports.isInteger = isInteger;
-exports.empty = empty;
-
-function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
-
-var classTypeList = ["Boolean", "Number", "String", "Function", "Array", "Date", "RegExp", "Object", "Error", "Symbol"];
-var classTypes = {};
-
-classTypeList.forEach(function (name) {
-  classTypes["[object " + name + "]"] = name.toLowerCase();
-});
-
-function getType(obj) {
-  if (obj == null) {
-    return obj + "";
-  }
-  return (typeof obj === "undefined" ? "undefined" : _typeof(obj)) === "object" || typeof obj === "function" ? classTypes[Object.prototype.toString.call(obj)] || "object" : typeof obj === "undefined" ? "undefined" : _typeof(obj);
-}
-
-function isArray(obj) {
-  return Array.isArray(obj);
-}
-
-function isObject(obj) {
-  return !isArray(obj) && getType(obj) === "object";
-}
-
-function isNumber(obj) {
-  return getType(obj) === "number";
-}
-
-function isString(obj) {
-  return getType(obj) === "string";
-}
-
-function isBoolean(obj) {
-  return getType(obj) === "boolean";
-}
-
-function isCollection(obj) {
-  return isArray(obj) || isObject(obj);
-}
-
-function isNumeric(obj) {
-  var type = getType(obj);
-  return (type === "number" || type === "string") && obj - parseFloat(obj) + 1 >= 0;
-}
-
-function isInteger(obj) {
-  var type = getType(obj);
-  return (type === "number" || type === "string") && /^([1-9]\d*|0)$/.test(obj);
-}
-
-function empty(obj) {
-  if (isArray(obj)) {
-    return obj.length === 0;
-  } else if (isObject(obj)) {
-    return Object.keys(obj).length === 0;
-  } else if (isNumeric(obj)) {
-    return parseFloat(obj) === 0;
-  }
-  return !obj;
-}
-
-},{}],13:[function(require,module,exports){
+},{"./utils/collection":12,"./utils/core":13,"./utils/text":14}],12:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -881,7 +805,7 @@ function simpleOp(op, data, path) {
   return data;
 }
 
-},{"./core":14}],14:[function(require,module,exports){
+},{"./core":13}],13:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -959,7 +883,7 @@ function empty(obj) {
   return !obj;
 }
 
-},{}],15:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1119,4 +1043,4 @@ function matches(data, selector) {
   return true;
 }
 
-},{"./collection":13,"./core":14}]},{},[1]);
+},{"./collection":12,"./core":13}]},{},[1]);
