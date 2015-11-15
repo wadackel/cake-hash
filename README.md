@@ -497,7 +497,7 @@ console.log(result); // [2, 4, 6, 8, 10]
 ```
 
 
-### map(data, path, callback)
+### reduce(data, path, callback)
 **`data` : array | object**  
 **`path` : string**  
 **`callback` : function**  
