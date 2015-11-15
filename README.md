@@ -57,7 +57,7 @@ $ npm install --save-dev cake-hash
 
 #### use
 ```javascript
-import CakeHash from `cake-hash`
+import CakeHash from "cake-hash"
 
 CakeHash.__METHOD__()
 ```
@@ -86,7 +86,7 @@ You apply matchers to expression elements.
 
 ### Expression Types
 | Expression | Definition                                                                        |
-|------------|-----------------------------------------------------------------------------------|
+| :----------| :---------------------------------------------------------------------------------|
 | `{n}`      | Represents a numeric key. Will match any string or numeric key.                   |
 | `{s}`      | Represents a string. Will match any string value including numeric string values. |
 | `Foo`      | Matches keys with the exact same value.                                           |
@@ -95,8 +95,9 @@ All expression elements are supported by all methods. In addition to expression 
 
 
 ### Attribute Matching Types
+| Matcher        | Definition                                                                    |
+| :--------------| :-----------------------------------------------------------------------------|
 | `[id]`         | Match elements with a given array key.                                        |
-|----------------|-------------------------------------------------------------------------------|
 | `[id=2]`       | Match elements with id equal to 2.                                            |
 | `[id!=2]`      | Match elements with id not equal to 2.                                        |
 | `[id>2]`       | Match elements with id greater than 2.                                        |
