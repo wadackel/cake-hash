@@ -560,10 +560,16 @@ describe("cake-hash", () => {
         {item: {id: 1, title: "first"}},
         {item: {id: 2, title: "second"}},
         {item: {id: 3, title: "third"}},
-        {item: {id: 4}, testable: true},
+        {item: {id: 4, title: "fourth"}, testable: true},
         {item: {id: 5, title: "fifth"}}
       ];
-      assert.deepEqual(Hash.remove(data, "{n}[testable].item[id=/\\b2|\\b4/].title"), data);
+      assert.deepEqual(Hash.remove(data, "{n}[testable].item[id=/\\b2|\\b4/].title"), [
+        {item: {id: 1, title: "first"}},
+        {item: {id: 2, title: "second"}},
+        {item: {id: 3, title: "third"}},
+        {item: {id: 4}, testable: true},
+        {item: {id: 5, title: "fifth"}}
+      ]);
     });
   });
 
