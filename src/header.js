@@ -5,5 +5,5 @@
  * @author tsuyoshiwada
  * @homepage https://github.com/tsuyoshiwada/cake-hash
  * @license MIT
- * @version 0.0.1
+ * @version 0.0.2
  */
