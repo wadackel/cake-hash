@@ -1,8 +1,8 @@
 {
-  "name": "hash-cake",
+  "name": "cake-hash",
   "version": "0.0.1",
   "description": "CakePHP in Utility.Hash class like a collection manipulation. In JavaScript.",
-  "main": "hash-cake.js",
+  "main": "cake-hash.js",
   "scripts": {
     "start": "npm run watch",
     "test": "npm run lint && npm run mocha",
@@ -16,7 +16,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tsuyoshiwada/hash-cake.git"
+    "url": "https://github.com/tsuyoshiwada/cake-hash.git"
   },
   "keywords": [
     "array",
@@ -30,9 +30,9 @@
   "author": "tsuyoshiwada",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/tsuyoshiwada/hash-cake/issues"
+    "url": "https://github.com/tsuyoshiwada/cake-hash/issues"
   },
-  "homepage": "https://github.com/tsuyoshiwada/hash-cake",
+  "homepage": "https://github.com/tsuyoshiwada/cake-hash",
   "devDependencies": {
     "babel-preset-es2015": "^6.1.18",
     "babelify": "^7.2.0",

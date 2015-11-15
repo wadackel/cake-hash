@@ -137,7 +137,7 @@ console.log(result); // default!!
 **`path` : string**  
 **`return`: mixed**  
 
-CakeHash.extract() supports all expression, and matcher components of Hash Path Syntax.
+`CakeHash.extract()` supports all expression, and matcher components of Hash Path Syntax.
 You can use extract to retrieve data from arrays, along arbitrary paths quickly without having to loop through the data structures.
 Instead you use path expressions to qualify which elements you want returned.
 
