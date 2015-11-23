@@ -179,6 +179,17 @@ describe("cake-hash", () => {
 
     data = {a: {b: {c: {d: 1}}}};
     assert(Hash.get(data, "a.b.c.d") === 1);
+
+    data = {
+      "example.com": {
+        "path": {
+          "to": {
+            "index.html": "Hello World"
+          }
+        }
+      }
+    };
+    assert(Hash.get(data, "example\\.com.path.to.index\\.html") === "Hello World");
   });
 
   describe("extract()", () => {
@@ -414,6 +425,26 @@ describe("cake-hash", () => {
 
       data["level1"]["level2"] = ["test1", "test2"];
       assert.deepEqual(Hash.extract(data, "level1.level2bis"), expected);
+    });
+
+    it("FilenameKey", () => {
+      let data = {
+        "cake-hash.min.js": [
+          {keyword: "array"},
+          {keyword: "object"},
+          {keyword: "utility"},
+          {keyword: "browser"},
+          {keyword: "client"},
+          {keyword: "server"},
+          {keyword: "cakephp"}
+        ]
+      };
+      
+      assert.deepEqual(Hash.extract(data, "cake-hash\\.min\\.js.{n}[keyword=/^(a|c)/]"), [
+        {keyword: "array"},
+        {keyword: "client"},
+        {keyword: "cakephp"}
+      ]);
     });
   });
 
@@ -720,6 +751,20 @@ describe("cake-hash", () => {
       "0/post/id": 1,
       "1/post/id": 2
     });
+
+    data = [
+      {"index.html": {title: "Dashboard", body: "Dashboard Page"}},
+      {"about.html": {title: "About", body: "About Page"}},
+      {"./path/to/file.bundle.js": {title: "Bundle File", body: "Hello"}},
+    ];
+    assert.deepEqual(Hash.flatten(data, "."), {
+      "0.index\\.html.title": "Dashboard",
+      "0.index\\.html.body": "Dashboard Page",
+      "1.about\\.html.title": "About",
+      "1.about\\.html.body": "About Page",
+      "2.\\./path/to/file\\.bundle\\.js.title": "Bundle File",
+      "2.\\./path/to/file\\.bundle\\.js.body": "Hello",
+    });
   });
 
   it("expand", () => {
@@ -772,6 +817,21 @@ describe("cake-hash", () => {
         b: {
           100: {a: null},
           200: {a: null}
+        }
+      }
+    });
+
+    data = {
+      "https://github\\.com/user/.repo.123.body": "CakePHP",
+      "https://github\\.com/user/.repo.124.body": "CakeHash",
+      "https://github\\.com/user/.repo.125.body": "npm"
+    };
+    assert.deepEqual(Hash.expand(data), {
+      "https://github.com/user/": {
+        repo: {
+          123: {body: "CakePHP"},
+          124: {body: "CakeHash"},
+          125: {body: "npm"}
         }
       }
     });
