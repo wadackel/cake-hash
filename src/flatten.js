@@ -17,6 +17,7 @@ function _flatten(input, separator, currentPath = null) {
   }
 
   Collection.each(input, function(val, key) {
+    key = (key + "").split(separator).join(`\\${separator}`);
     path = currentPath == null ? key : `${currentPath}${separator}${key}`;
     if (Core.isCollection(val)) {
       let children = _flatten(val, separator, path);

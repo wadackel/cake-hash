@@ -10,7 +10,7 @@ export function getType(obj) {
   if (obj == null) {
     return obj + "";
   }
-  return typeof obj === "object" || typeof obj === "function" ? 
+  return typeof obj === "object" || typeof obj === "function" ?
     classTypes[Object.prototype.toString.call(obj)] || "object" :
     typeof obj;
 }

@@ -5,7 +5,7 @@
  * @author tsuyoshiwada
  * @homepage https://github.com/tsuyoshiwada/cake-hash
  * @license MIT
- * @version 0.0.4
+ * @version 0.0.5
  */
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -281,44 +281,28 @@
     return data;
   }
 
-  function get(data, path) {
-    var defaultValue = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
+  function trim(input) {
+    return input.replace(/^\s+|\s+$/g, "");
+  }
 
-    var parts = undefined,
-        val = undefined;
+  function split(input, separator) {
+    var tokens = (input + "").split(separator);
+    var results = [];
+    var previousValue = null;
 
-    if (!isCollection(data)) {
-      return defaultValue;
-    }
-
-    if (empty(data) || path == null || path === "") {
-      return defaultValue;
-    }
-
-    if (isString(path) || isNumeric(path)) {
-      parts = (path + "").split(".");
-    } else {
-      if (!isArray(path)) {
-        return defaultValue;
-      }
-      parts = path;
-    }
-
-    val = isCollection(data) ? clone(data) : data;
-    each(parts, function (v) {
-      if (isCollection(val) && hasProp(val, v)) {
-        val = val[v];
+    each(tokens, function (token, i) {
+      if (/^.*\\$/.test(token)) {
+        previousValue = token;
       } else {
-        val = defaultValue;
-        return false;
+        if (previousValue != null) {
+          token = previousValue.slice(0, previousValue.length - 1) + separator + token;
+          previousValue = null;
+        }
+        results.push(token);
       }
     });
 
-    return val;
-  }
-
-  function trim(input) {
-    return input.replace(/^\s+|\s+$/g, "");
+    return results;
   }
 
   function tokenize(str) {
@@ -345,14 +329,19 @@
           tmpOffset = offsets[i];
         }
       }
+      // console.log(depth, buffer);
       if (tmpOffset !== -1) {
         buffer += str.substr(offset, tmpOffset - offset);
         var char = str.substr(tmpOffset, 1);
-        if (!depth && char === separator) {
+        if (!depth && char === separator && str.substr(tmpOffset - 1, 1) !== "\\") {
           results.push(buffer);
           buffer = "";
         } else {
-          buffer += char;
+          if (depth === 0 && /^.*\\$/.test(buffer)) {
+            buffer = buffer.slice(0, buffer.length - 1) + char;
+          } else {
+            buffer += char;
+          }
         }
         if (left !== right) {
           if (char === left) {
@@ -455,6 +444,42 @@
     return true;
   }
 
+  function get(data, path) {
+    var defaultValue = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
+
+    var parts = undefined,
+        val = undefined;
+
+    if (!isCollection(data)) {
+      return defaultValue;
+    }
+
+    if (empty(data) || path == null || path === "") {
+      return defaultValue;
+    }
+
+    if (isString(path) || isNumeric(path)) {
+      parts = split(path, ".");
+    } else {
+      if (!isArray(path)) {
+        return defaultValue;
+      }
+      parts = path;
+    }
+
+    val = isCollection(data) ? clone(data) : data;
+    each(parts, function (v) {
+      if (isCollection(val) && hasProp(val, v)) {
+        val = val[v];
+      } else {
+        val = defaultValue;
+        return false;
+      }
+    });
+
+    return val;
+  }
+
   function extract(data, path) {
     if (!isCollection(data)) {
       return null;
@@ -473,7 +498,7 @@
     var context = babelHelpers.defineProperty({}, key, [data]);
 
     if (path.indexOf("[") < 0) {
-      tokens = path.split(".");
+      tokens = split(path, ".");
     } else {
       tokens = tokenize(path, ".", "[", "]");
     }
@@ -684,6 +709,7 @@
     }
 
     each(input, function (val, key) {
+      key = (key + "").split(separator).join("\\" + separator);
       path = currentPath == null ? key : "" + currentPath + separator + key;
       if (isCollection(val)) {
         var children = _flatten(val, separator, path);
@@ -704,7 +730,7 @@
     var results = {};
 
     each(data, function (value, flat) {
-      var keys = (flat + "").split(separator).reverse();
+      var keys = split(flat, separator).reverse();
       var child = {};
       child[keys.shift()] = value;
       each(keys, function (k) {
@@ -726,7 +752,7 @@
     return !isArray(values) ? null : values.reduce(callback);
   }
 
-  var VERSION = "0.0.4";
+  var VERSION = "0.0.5";
 
   // Core
   function CakeHash() {}

@@ -1,10 +1,11 @@
 import * as Collection from "./utils/collection"
+import * as Text from "./utils/text"
 
 export default function expand(data, separator = ".") {
   let results = {};
 
   Collection.each(data, (value, flat) => {
-    let keys = (flat + "").split(separator).reverse();
+    let keys = Text.split(flat, separator).reverse();
     let child = {};
     child[keys.shift()] = value;
     Collection.each(keys, (k) => {

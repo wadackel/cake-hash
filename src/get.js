@@ -1,5 +1,6 @@
 import * as Core from "./utils/core"
 import * as Collection from "./utils/collection"
+import * as Text from "./utils/text"
 
 export default function get(data, path, defaultValue = null) {
   let parts, val;
@@ -13,7 +14,7 @@ export default function get(data, path, defaultValue = null) {
   }
 
   if (Core.isString(path) || Core.isNumeric(path)) {
-    parts = (path + "").split(".");
+    parts = Text.split(path, ".");
   } else {
     if (!Core.isArray(path)) {
       return defaultValue;

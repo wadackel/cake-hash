@@ -21,7 +21,7 @@ export default function extract(data, path) {
   let context = {[key]: [data]};
 
   if (path.indexOf("[") < 0) {
-    tokens = path.split(".");
+    tokens = Text.split(path, ".");
   } else {
     tokens = Text.tokenize(path, ".", "[", "]");
   }

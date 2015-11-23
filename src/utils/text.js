@@ -7,6 +7,27 @@ export function trim(input){
 }
 
 
+export function split(input, separator){
+  const tokens = (input + "").split(separator);
+  const results = [];
+  let previousValue = null;
+  
+  Collection.each(tokens, (token, i) => {
+    if (/^.*\\$/.test(token)) {
+      previousValue = token;
+    } else {
+      if (previousValue != null) {
+        token = previousValue.slice(0, previousValue.length - 1) + separator + token;
+        previousValue = null;
+      }
+      results.push(token);
+    }
+  });
+  
+  return results;
+}
+
+
 export function tokenize(str, separator = ",", left = "(", right = ")") {
   if( Core.empty(str) ){
     return [];
@@ -31,14 +52,19 @@ export function tokenize(str, separator = ",", left = "(", right = ")") {
         tmpOffset = offsets[i];
       }
     }
+    // console.log(depth, buffer);
     if (tmpOffset !== -1) {
       buffer += str.substr(offset, (tmpOffset - offset));
       let char = str.substr(tmpOffset, 1);
-      if (!depth && char === separator) {
+      if (!depth && char === separator && str.substr(tmpOffset - 1, 1) !== "\\") {
         results.push(buffer);
         buffer = "";
       } else {
-        buffer += char;
+        if (depth === 0 && /^.*\\$/.test(buffer)) {
+          buffer = buffer.slice(0, buffer.length - 1) + char;
+        } else {
+          buffer += char;
+        }
       }
       if (left !== right) {
         if (char === left) {

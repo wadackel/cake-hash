@@ -9,7 +9,7 @@ import expand from "./expand"
 import map from "./map"
 import reduce from "./reduce"
 
-const VERSION = "0.0.4";
+const VERSION = "0.0.5";
 
 
 // Core
