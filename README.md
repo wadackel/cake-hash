@@ -107,16 +107,6 @@ All expression elements are supported by all methods. In addition to expression 
 | `[text=/.../]` | Match elements that have values matching the regular expression inside `...`. |
 
 
-### Expression Types
-| Expression | Definition                                                                        |
-| :--------- | :-------------------------------------------------------------------------------- |
-| `{n}`      | Represents a numeric key. Will match any string or numeric key.                   |
-| `{s}`      | Represents a string. Will match any string value including numeric string values. |
-| `Foo`      | Matches keys with the exact same value.                                           |
-
-All expression elements are supported by all methods. In addition to expression elements, you can use attribute matching with certain methods.
-
-
 ### Escape the separator
 The separator in path syntax can be escaped by using the `\`.
 
@@ -133,6 +123,7 @@ const data = {
 let result = CakeHash.get(data, "index\\.html.css.style\\.css");
 console.log(result); // * {box-sizing: border-box}
 ```
+
 
 
 ## API
