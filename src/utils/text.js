@@ -12,7 +12,7 @@ export function split(input, separator){
   const results = [];
   let previousValue = null;
   
-  Collection.each(tokens, (token, i) => {
+  Collection.each(tokens, (token) => {
     if (/^.*\\$/.test(token)) {
       previousValue = token;
     } else {

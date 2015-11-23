@@ -290,7 +290,7 @@
     var results = [];
     var previousValue = null;
 
-    each(tokens, function (token, i) {
+    each(tokens, function (token) {
       if (/^.*\\$/.test(token)) {
         previousValue = token;
       } else {

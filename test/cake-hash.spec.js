@@ -755,7 +755,7 @@ describe("cake-hash", () => {
     data = [
       {"index.html": {title: "Dashboard", body: "Dashboard Page"}},
       {"about.html": {title: "About", body: "About Page"}},
-      {"./path/to/file.bundle.js": {title: "Bundle File", body: "Hello"}},
+      {"./path/to/file.bundle.js": {title: "Bundle File", body: "Hello"}}
     ];
     assert.deepEqual(Hash.flatten(data, "."), {
       "0.index\\.html.title": "Dashboard",
@@ -763,7 +763,7 @@ describe("cake-hash", () => {
       "1.about\\.html.title": "About",
       "1.about\\.html.body": "About Page",
       "2.\\./path/to/file\\.bundle\\.js.title": "Bundle File",
-      "2.\\./path/to/file\\.bundle\\.js.body": "Hello",
+      "2.\\./path/to/file\\.bundle\\.js.body": "Hello"
     });
   });
 
