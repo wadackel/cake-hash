@@ -1,6 +1,6 @@
 {
   "name": "cake-hash",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "CakePHP in Utility.Hash class like a collection manipulation. In JavaScript.",
   "main": "cake-hash.js",
   "scripts": {

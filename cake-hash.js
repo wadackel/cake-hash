@@ -5,7 +5,7 @@
  * @author tsuyoshiwada
  * @homepage https://github.com/tsuyoshiwada/cake-hash
  * @license MIT
- * @version 0.0.5
+ * @version 0.0.6
  */
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -752,7 +752,7 @@
     return !isArray(values) ? null : values.reduce(callback);
   }
 
-  var VERSION = "0.0.5";
+  var VERSION = "0.0.6";
 
   // Core
   function CakeHash() {}
