@@ -52,7 +52,7 @@ Please use [underscore.js](https://github.com/jashkenas/underscore) and [lodash.
 ## INSTALL
 ### via NPM
 ```
-$ npm install --save-dev cake-hash
+$ npm install cake-hash --save
 ```
 
 #### use
